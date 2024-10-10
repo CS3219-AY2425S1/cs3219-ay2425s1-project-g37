@@ -1,0 +1,35 @@
+{
+  "name": "peerprep",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b && vite build && cp serve.json dist/serve.json",
+    "dev": "vite",
+    "lint": "eslint .",
+    "start": "serve dist -l $VITE_PEERPREP_FRONTEND_PORT"
+  },
+  "dependencies": {
+    "@peerprep/env": "workspace:*",
+    "@peerprep/eslint-config": "workspace:*",
+    "@peerprep/schemas": "workspace:*",
+    "@peerprep/tsconfig": "workspace:*",
+    "@peerprep/ui": "workspace:*",
+    "@peerprep/utils": "workspace:*",
+    "@types/bun": "1.1.9",
+    "@types/react": "18.3.7",
+    "@types/react-dom": "18.3.0",
+    "@vitejs/plugin-react-swc": "3.7.0",
+    "autoprefixer": "10.4.20",
+    "lucide-react": "0.445.0",
+    "postcss": "8.4.47",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-hot-toast": "2.4.1",
+    "react-router-dom": "6.26.2",
+    "serve": "14.2.3",
+    "swr": "2.2.5",
+    "tailwindcss": "3.4.12",
+    "typescript": "5.6.2",
+    "vite": "5.4.6"
+  }
+}

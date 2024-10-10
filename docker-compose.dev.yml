@@ -1,0 +1,28 @@
+services:
+  user:
+    build:
+      target: development
+    command: bun dev --filter=@peerprep/user-service
+    volumes:
+      - ./services/user-service:/app/services/user-service
+
+  questions:
+    build:
+      target: development
+    command: bun dev --filter=@peerprep/questions-service
+    volumes:
+      - ./services/questions-service:/app/services/questions-service
+
+  frontend:
+    build:
+      target: development
+    command: bun dev --filter=peerprep
+    volumes:
+      - ./apps/peerprep:/app/apps/peerprep
+
+  admin-portal:
+    build:
+      target: development
+    command: bun dev --filter=@peerprep/admin-portal
+    volumes:
+      - ./apps/admin-portal:/app/apps/admin-portal
