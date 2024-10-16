@@ -1,0 +1,7 @@
+{
+  "extends": "@peerprep/tsconfig/base.json",
+  "include": ["vite.config.ts"],
+  "compilerOptions": {
+    "paths": { "~/*": ["./src/*"] }
+  }
+}

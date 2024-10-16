@@ -1,0 +1,7 @@
+{
+  "extends": "@peerprep/tsconfig/browser.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "paths": { "~/*": ["./src/*"] }
+  }
+}
