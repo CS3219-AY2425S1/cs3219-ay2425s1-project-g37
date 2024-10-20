@@ -72,12 +72,12 @@ export default function AuthProtectedLayout() {
   if (user === undefined) return null; // loading state
   if (user === null) return <Navigate to="/login" />;
   return (
-    <div>
-      <nav className="container flex flex-row justify-between py-6">
+    <div className="flex h-screen flex-col">
+      <nav className="container flex flex-shrink-0 flex-row justify-between py-6">
         <NavLogo />
         <NavAvatar />
       </nav>
-      <main className="container py-6">
+      <main className="container flex w-full flex-grow overflow-hidden py-6">
         <Outlet />
       </main>
     </div>

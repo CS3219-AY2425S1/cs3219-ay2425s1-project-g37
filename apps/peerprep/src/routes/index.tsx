@@ -52,9 +52,9 @@ function MatchmakingForm({
   if (!user || !allTags.length) return null;
 
   return (
-    <div className="flex w-full flex-row justify-center px-6 py-12">
+    <div className="flex w-full flex-row justify-center px-6">
       <form
-        className="bg-main-900 flex w-full max-w-lg flex-col gap-6 p-12"
+        className="bg-main-900 flex w-full max-w-lg flex-col gap-6 overflow-auto p-12"
         onSubmit={async e => {
           e.preventDefault();
           onMatchmaking(difficulties, selectedTags);
