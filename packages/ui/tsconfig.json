@@ -1,0 +1,3 @@
+{
+  "extends": "@peerprep/tsconfig/browser.json"
+}
