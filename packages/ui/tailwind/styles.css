@@ -1,0 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Reddit+Mono:wght@200..900&display=swap");
+
+@config "./config.js";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .label {
+    @apply text-main-400 text-xs uppercase tracking-wider;
+  }
+}
+
+/* Scale with font size */
+.lucide {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.prose code {
+  @apply bg-main-700 inline-block px-1 [font-weight:inherit] before:content-[''] after:content-[''];
+}
+
+.prose pre {
+  @apply pb-[0.5em]; /* Not sure why this is needed, but it looks unbalanced without */
+}
+
+.prose pre code {
+  @apply bg-transparent px-0;
+}

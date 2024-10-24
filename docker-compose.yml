@@ -1,0 +1,152 @@
+services:
+  mongo:
+    # https://ginkcode.com/post/how-to-set-up-mongodb-with-replica-set-via-docker-compose
+    build:
+      context: docker
+      dockerfile: mongo.Dockerfile
+    container_name: mongodb-replicaset
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    command: --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all --port 27017 --quiet --logpath /dev/null
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'127.0.0.1:27017'}]}) }" | mongosh --port 27017 -u root -p root --authenticationDatabase admin
+      interval: 5s
+      timeout: 15s
+      start_period: 15s
+      retries: 10
+    volumes:
+      - data:/data/db
+    networks:
+      - webnet
+
+  user:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=@peerprep/user-service
+        - SERVICE_DIRECTORY=services/user-service
+    container_name: user
+    restart: always
+    environment:
+      - PORT=${VITE_USER_SERVICE_PORT}
+      - DATABASE_URL=mongodb://root:root@mongo:27017/peerprep?authSource=admin&replicaSet=rs0&retryWrites=true&w=majority&directConnection=true
+    ports:
+      - ${VITE_USER_SERVICE_PORT}:${VITE_USER_SERVICE_PORT}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${VITE_USER_SERVICE_PORT}/status"]
+      interval: 5s
+      timeout: 15s
+      start_period: 15s
+      retries: 10
+    networks:
+      - webnet
+
+  questions:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=@peerprep/questions-service
+        - SERVICE_DIRECTORY=services/questions-service
+    container_name: questions
+    restart: always
+    environment:
+      - PORT=${VITE_QUESTION_SERVICE_PORT}
+      - DATABASE_URL=mongodb://root:root@mongo:27017/peerprep?authSource=admin&replicaSet=rs0&retryWrites=true&w=majority&directConnection=true
+    ports:
+      - ${VITE_QUESTION_SERVICE_PORT}:${VITE_QUESTION_SERVICE_PORT}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${VITE_QUESTION_SERVICE_PORT}/status"]
+      interval: 5s
+      timeout: 15s
+      start_period: 15s
+      retries: 10
+    networks:
+      - webnet
+
+  matching:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=@peerprep/matching-service
+        - SERVICE_DIRECTORY=services/matching-service
+    container_name: matching
+    restart: always
+    environment:
+      - PORT=${VITE_MATCHING_SERVICE_PORT}
+      - DATABASE_URL=mongodb://root:root@mongo:27017/peerprep?authSource=admin&replicaSet=rs0&retryWrites=true&w=majority&directConnection=true
+    ports:
+      - ${VITE_MATCHING_SERVICE_PORT}:${VITE_MATCHING_SERVICE_PORT}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${VITE_MATCHING_SERVICE_PORT}/status"]
+      interval: 5s
+      timeout: 15s
+      start_period: 15s
+      retries: 10
+    networks:
+      - webnet
+
+  collaboration:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=@peerprep/collaboration-service
+        - SERVICE_DIRECTORY=services/collaboration-service
+    container_name: collaboration
+    restart: always
+    environment:
+      - PORT=${VITE_COLLABORATION_SERVICE_PORT}
+      - DATABASE_URL=mongodb://root:root@mongo:27017/peerprep?authSource=admin&replicaSet=rs0&retryWrites=true&w=majority&directConnection=true
+    ports:
+      - ${VITE_COLLABORATION_SERVICE_PORT}:${VITE_COLLABORATION_SERVICE_PORT}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${VITE_COLLABORATION_SERVICE_PORT}/status"]
+      interval: 5s
+      timeout: 15s
+      start_period: 15s
+      retries: 10
+    networks:
+      - webnet
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=peerprep
+        - SERVICE_DIRECTORY=apps/peerprep
+    container_name: frontend
+    restart: always
+    environment:
+      - PORT=${VITE_PEERPREP_FRONTEND_PORT}
+    ports:
+      - ${VITE_PEERPREP_FRONTEND_PORT}:${VITE_PEERPREP_FRONTEND_PORT}
+    networks:
+      - webnet
+
+  admin-portal:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=@peerprep/admin-portal
+        - SERVICE_DIRECTORY=apps/admin-portal
+    container_name: admin-portal
+    restart: always
+    environment:
+      - PORT=${VITE_PEERPREP_QUESTION_SPA_PORT}
+    ports:
+      - ${VITE_PEERPREP_QUESTION_SPA_PORT}:${VITE_PEERPREP_QUESTION_SPA_PORT}
+    networks:
+      - webnet
+
+volumes:
+  data:
+
+networks:
+  webnet:

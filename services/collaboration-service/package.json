@@ -1,0 +1,36 @@
+{
+  "name": "@peerprep/collaboration-service",
+  "private": true,
+  "scripts": {
+    "build": "NODE_ENV=production bun build src/index.ts --target bun --outdir ./dist",
+    "dev": "bun --watch src/index.ts",
+    "lint": "eslint .",
+    "start": "NODE_ENV=production bun run dist/index.js"
+  },
+  "dependencies": {
+    "@hocuspocus/extension-database": "2.13.7",
+    "@hocuspocus/server": "2.13.7",
+    "@peerprep/env": "workspace:*",
+    "@peerprep/eslint-config": "workspace:*",
+    "@peerprep/schemas": "workspace:*",
+    "@peerprep/tsconfig": "workspace:*",
+    "@peerprep/utils": "workspace:*",
+    "@types/bun": "1.1.11",
+    "@types/cors": "2.8.17",
+    "@types/express-ws": "3.0.5",
+    "@types/jsonwebtoken": "9.0.7",
+    "@types/node": "22.7.7",
+    "cookie": "1.0.1",
+    "cors": "2.8.5",
+    "express": "4.21.1",
+    "express-async-errors": "3.1.1",
+    "express-ws": "5.0.2",
+    "http-status-codes": "2.3.0",
+    "jsonwebtoken": "9.0.2",
+    "superjson": "2.2.1",
+    "tsx": "4.19.1",
+    "typescript": "5.6.3",
+    "y-protocols": "1.0.6",
+    "yjs": "13.6.20"
+  }
+}

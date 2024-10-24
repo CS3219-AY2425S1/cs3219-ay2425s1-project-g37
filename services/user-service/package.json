@@ -1,0 +1,22 @@
+{
+  "name": "@peerprep/user-service",
+  "private": true,
+  "scripts": {
+    "build": "NODE_ENV=production bun build src/index.ts --target bun --outdir ./dist",
+    "dev": "bun --watch src/index.ts",
+    "lint": "eslint .",
+    "start": "NODE_ENV=production bun run dist/index.js"
+  },
+  "dependencies": {
+    "@elysiajs/jwt": "1.1.1",
+    "@peerprep/env": "workspace:*",
+    "@peerprep/eslint-config": "workspace:*",
+    "@peerprep/schemas": "workspace:*",
+    "@peerprep/tsconfig": "workspace:*",
+    "@peerprep/utils": "workspace:*",
+    "@types/bun": "1.1.11",
+    "elysia": "1.1.22",
+    "http-status-codes": "2.3.0",
+    "typescript": "5.6.3"
+  }
+}

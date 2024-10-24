@@ -1,0 +1,23 @@
+{
+  "name": "@peerprep/db",
+  "private": true,
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@peerprep/eslint-config": "workspace:*",
+    "@peerprep/tsconfig": "workspace:*",
+    "@prisma/client": "5.21.1",
+    "@types/bun": "1.1.11",
+    "prisma": "5.21.1",
+    "typescript": "5.6.3"
+  }
+}
