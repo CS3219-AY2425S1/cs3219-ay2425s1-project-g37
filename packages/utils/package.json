@@ -1,0 +1,30 @@
+{
+  "name": "@peerprep/utils",
+  "private": true,
+  "exports": {
+    "./server": {
+      "import": "./src/server.ts"
+    },
+    "./client": {
+      "import": "./src/client.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@elysiajs/jwt": "1.1.1",
+    "@peerprep/db": "workspace:*",
+    "@peerprep/env": "workspace:*",
+    "@peerprep/eslint-config": "workspace:*",
+    "@peerprep/tsconfig": "workspace:*",
+    "@types/bun": "1.1.11",
+    "elysia": "1.1.22",
+    "http-status-codes": "2.3.0",
+    "ky": "1.7.2",
+    "superjson": "2.2.1",
+    "swr": "2.2.5",
+    "typescript": "5.6.3"
+  }
+}

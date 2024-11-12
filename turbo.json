@@ -1,0 +1,33 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "globalEnv": [
+    "VITE_SELF_HOST",
+    "DATABASE_URL",
+    "JWT_SECRET",
+    "ADMIN_SIGNUP_TOKEN",
+    "OPENAI_API_KEY"
+  ],
+  "tasks": {
+    "db:generate": {
+      "cache": false
+    },
+    "db:push": {
+      "cache": false
+    },
+    "lint": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "start": {
+      "persistent": true
+    }
+  }
+}

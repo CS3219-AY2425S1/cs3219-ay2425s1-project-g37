@@ -1,0 +1,33 @@
+{
+  "name": "@peerprep/root",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "build": "bun env -- turbo build",
+    "db:generate": "turbo db:generate",
+    "db:push:local": "DATABASE_URL='mongodb://root:root@localhost:27017/peerprep?authSource=admin&replicaSet=rs0&retryWrites=true&w=majority&directConnection=true' turbo db:push",
+    "dev": "bun env -- turbo dev",
+    "env": "bun run --env-file=.env",
+    "format": "prettier --write .",
+    "postinstall": "bun db:generate",
+    "lint": "turbo lint && prettier --check .",
+    "start": "bun env -- turbo start"
+  },
+  "dependencies": {
+    "@peerprep/tsconfig": "workspace:*",
+    "@trivago/prettier-plugin-sort-imports": "4.3.0",
+    "@types/bun": "1.1.11",
+    "@types/turndown": "5.0.5",
+    "prettier": "3.3.3",
+    "prettier-plugin-packagejson": "2.5.3",
+    "prettier-plugin-tailwindcss": "0.6.8",
+    "turbo": "2.2.1",
+    "turndown": "7.2.0",
+    "typescript": "5.6.3"
+  },
+  "packageManager": "bun@1.1.31"
+}

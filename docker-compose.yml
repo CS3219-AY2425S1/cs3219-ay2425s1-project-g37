@@ -1,0 +1,156 @@
+services:
+  mongo:
+    # https://ginkcode.com/post/how-to-set-up-mongodb-with-replica-set-via-docker-compose
+    build:
+      context: docker
+      dockerfile: mongo.Dockerfile
+    container_name: mongodb-replicaset
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    command: --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all --port 27017 --quiet --logpath /dev/null
+    healthcheck:
+      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'127.0.0.1:27017'}]}) }" | mongosh --port 27017 -u root -p root --authenticationDatabase admin
+      interval: 5s
+      timeout: 15s
+      start_period: 15s
+      retries: 10
+    volumes:
+      - data:/data/db
+    networks:
+      - webnet
+
+  user:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=@peerprep/user-service
+        - SERVICE_DIRECTORY=services/user-service
+    container_name: user
+    restart: always
+    environment:
+      - DATABASE_URL=mongodb://root:root@mongo:27017/peerprep?authSource=admin&replicaSet=rs0&retryWrites=true&w=majority&directConnection=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/status"]
+      interval: 5s
+      timeout: 15s
+      start_period: 15s
+      retries: 10
+    networks:
+      - webnet
+
+  questions:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=@peerprep/questions-service
+        - SERVICE_DIRECTORY=services/questions-service
+    container_name: questions
+    restart: always
+    environment:
+      - DATABASE_URL=mongodb://root:root@mongo:27017/peerprep?authSource=admin&replicaSet=rs0&retryWrites=true&w=majority&directConnection=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/status"]
+      interval: 5s
+      timeout: 15s
+      start_period: 15s
+      retries: 10
+    networks:
+      - webnet
+
+  matching:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=@peerprep/matching-service
+        - SERVICE_DIRECTORY=services/matching-service
+    container_name: matching
+    restart: always
+    environment:
+      - DATABASE_URL=mongodb://root:root@mongo:27017/peerprep?authSource=admin&replicaSet=rs0&retryWrites=true&w=majority&directConnection=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/status"]
+      interval: 5s
+      timeout: 15s
+      start_period: 15s
+      retries: 10
+    networks:
+      - webnet
+
+  collaboration:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=@peerprep/collaboration-service
+        - SERVICE_DIRECTORY=services/collaboration-service
+    container_name: collaboration
+    restart: always
+    environment:
+      - DATABASE_URL=mongodb://root:root@mongo:27017/peerprep?authSource=admin&replicaSet=rs0&retryWrites=true&w=majority&directConnection=true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/status"]
+      interval: 5s
+      timeout: 15s
+      start_period: 15s
+      retries: 10
+    networks:
+      - webnet
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=peerprep
+        - SERVICE_DIRECTORY=apps/peerprep
+    container_name: frontend
+    restart: always
+    networks:
+      - webnet
+
+  admin-portal:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        - SERVICE_NAME=@peerprep/admin-portal
+        - SERVICE_DIRECTORY=apps/admin-portal
+    container_name: admin-portal
+    restart: always
+    networks:
+      - webnet
+
+  nginx:
+    build:
+      context: docker/nginx
+      dockerfile: Dockerfile
+      args:
+        - VITE_SELF_HOST=${VITE_SELF_HOST}
+    container_name: api-gateway
+    ports:
+      - "3000:3000"
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - user
+      - questions
+      - matching
+      - collaboration
+      - frontend
+      - admin-portal
+    volumes:
+      - ${CERT_PATH:-/dev/null}:/etc/ssl/certs/cert.pem:ro
+      - ${KEY_PATH:-/dev/null}:/etc/ssl/private/key.pem:ro
+    networks:
+      - webnet
+
+volumes:
+  data:
+
+networks:
+  webnet:

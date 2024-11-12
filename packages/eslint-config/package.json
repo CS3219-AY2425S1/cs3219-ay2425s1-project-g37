@@ -1,0 +1,14 @@
+{
+  "name": "@peerprep/eslint-config",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@eslint/js": "9.13.0",
+    "eslint": "9.13.0",
+    "eslint-plugin-react-hooks": "5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "0.4.13",
+    "globals": "15.11.0",
+    "typescript-eslint": "8.10.0"
+  }
+}

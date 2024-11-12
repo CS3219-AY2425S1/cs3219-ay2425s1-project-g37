@@ -1,0 +1,52 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["omitApi"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum QuestionDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  username  String   @unique
+  email     String   @unique
+  password  String // Should already be hashed
+  isAdmin   Boolean  @default(false)
+  roomIds   String[] @db.ObjectId
+  rooms     Room[]   @relation(fields: [roomIds], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Question {
+  id           String             @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  content      String
+  difficulty   QuestionDifficulty
+  tags         String[]
+  leetCodeLink String             @unique
+  rooms        Room[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  deletedAt    DateTime?
+}
+
+model Room {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  userIds    String[]  @db.ObjectId
+  users      User[]    @relation(fields: [userIds], references: [id])
+  questionId String    @db.ObjectId
+  question   Question  @relation(fields: [questionId], references: [id])
+  ydoc       Bytes?
+  staledAt   DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
